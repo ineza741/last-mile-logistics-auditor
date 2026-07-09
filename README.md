@@ -1,120 +1,91 @@
 # Last Mile Logistics Auditor
 
-## A. Executive Summary
+## Executive Summary
 
-Veridi Logistics experienced increasing negative customer reviews and needed to determine whether inaccurate delivery estimates were causing customer dissatisfaction. This project analyzed the Olist Brazilian E-Commerce dataset by combining order, customer, product, and review data into a single analytical dataset. The analysis found that delivery performance varies across regions, with some states experiencing higher late delivery rates. Late and super late deliveries showed lower customer review scores, confirming that logistics performance directly affects customer satisfaction. The final dashboard helps identify high-risk regions where logistics improvements should be prioritized.
+Veridi Logistics was getting more negative customer reviews and wanted to know if late deliveries were the cause. I analyzed the Olist Brazilian E-Commerce dataset to see if delivery delays were concentrated in certain regions. I combined orders, customers, products, and reviews into one dataset and found that some states have much higher late delivery rates than others. Late deliveries also had lower review scores. I built a dashboard that shows which regions need improvement.
 
 ---
 
-## B. Project Links
+## Project Links
 
-### Notebook
-[logistics_audit.ipynb](notebooks/logistics_audit.ipynb)
+- **Notebook:** [logistics_audit.ipynb](notebooks/logistics_audit.ipynb)
+- **Dashboard:** https://last-mile-logistics-auditorgit-cgkkhm3ufokdaoyvkl3xnh.streamlit.app/
+- **Presentation:** [Google Slides](https://docs.google.com/presentation/d/1MmSwxPIsFqK3bw5nUsLOsnjTN29Ck2Cm/edit?usp=sharing&ouid=110080855562115636061&rtpof=true&sd=true)
+
+---
+
+## Technical Explanation
+
+### Data Loading and Joins
+
+The dataset came as separate CSV files. I loaded orders, reviews, customers, order items, and products, then joined them using `order_id`, `customer_id`, and `product_id`.
+
+### Cleaning
+
+- Removed canceled and unavailable orders
+- Removed orders with no delivery date
+- Converted date columns to datetime format
+
+### Feature Engineering
+
+- `delay_days` = actual delivery date minus estimated delivery date
+- `delivery_status` = "On Time", "Late", or "Super Late"
+- `risk_score` = combines late delivery rate and review score
 
 ### Dashboard
-https://last-mile-logistics-auditorgit-cgkkhm3ufokdaoyvkl3xnh.streamlit.app/
 
-### Presentation
-[Google Slides Presentation](https://docs.google.com/presentation/d/1MmSwxPIsFqK3bw5nUsLOsnjTN29Ck2Cm/edit?usp=sharing&ouid=110080855562115636061&rtpof=true&sd=true)
+Built with Streamlit. Reads the cleaned CSV and shows KPIs, charts, and filters by state and product category.
 
 ---
 
-## C. Technical Explanation
+## Candidate Choice: State Risk Score
 
-### Data Cleaning
-
-The original dataset was provided as multiple relational CSV files. The data preparation process included:
-
-- Loading Orders, Reviews, Customers, Order Items, and Product datasets.
-- Joining datasets using relational keys:
-  - order_id
-  - customer_id
-  - product_id
-- Removing canceled and unavailable orders from delivery analysis.
-- Handling missing delivery dates.
-- Converting date columns into datetime format.
-- Creating new delivery performance features:
-  - delay_days
-  - days_difference
-  - delivery_status
-- Translating product categories from Portuguese to English.
-- Exporting a cleaned dataset for dashboard analysis.
-
-### Candidate's Choice Addition: State Risk Score
-
-I added a State Risk Score metric to help Veridi Logistics prioritize improvement areas.
+I created a State Risk Score to help find which states need the most attention.
 
 **Formula:**
 
 ```
-State Risk Score = Late Delivery Percentage × (5 - Average Review Score)
+State Risk Score = Late Delivery % × (5 - Average Review Score)
 ```
 
-This combines operational performance and customer satisfaction into one metric. A state with frequent late deliveries and poor customer reviews receives a higher score, helping managers identify regions where logistics improvements will create the highest business impact.
+A high score means the state has many late deliveries and unhappy customers. This helps prioritize where to improve logistics.
 
 ---
 
-## Business Problem
+## Dataset
 
-Veridi Logistics, a Brazilian e-commerce logistics company, noticed increasing negative customer reviews related to delivery delays. Management needed answers to two key questions:
+**Source:** [Olist Brazilian E-Commerce Dataset](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce) (Kaggle)
 
-1. **Are delivery delays happening in specific geographic regions?**
-2. **Are late deliveries causing negative customer reviews?**
-
-This project was designed to answer both questions through data analysis and provide actionable recommendations.
-
----
-
-## Dataset Used
-
-**Source:** [Olist Brazilian E-Commerce Public Dataset](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce) (Kaggle)
-
-| Dataset | Description |
-|---------|-------------|
-| `olist_orders_dataset.csv` | Order dates, delivery dates, status |
+| File | Description |
+|------|-------------|
+| `olist_orders_dataset.csv` | Order and delivery dates |
 | `olist_order_reviews_dataset.csv` | Customer review scores |
-| `olist_customers_dataset.csv` | Customer location (city, state) |
-| `olist_order_items_dataset.csv` | Products in each order |
-| `olist_products_dataset.csv` | Product details and category |
-| `product_category_name_translation.csv` | Portuguese to English category names |
+| `olist_customers_dataset.csv` | Customer location |
+| `olist_order_items_dataset.csv` | Products per order |
+| `olist_products_dataset.csv` | Product details |
+| `product_category_name_translation.csv` | Portuguese to English categories |
 
-> **Note:** Raw Kaggle CSV files are not included in the repository due to file size. The dashboard uses the cleaned processed file in `outputs/`.
-
----
-
-## Tools Used
-
-| Tool | Purpose |
-|------|---------|
-| **Python** | Core programming language |
-| **Pandas** | Data manipulation and analysis |
-| **NumPy** | Numerical computations |
-| **Plotly** | Interactive visualizations |
-| **Streamlit** | Dashboard framework |
-| **Jupyter Notebook** | Data exploration and pipeline development |
+Raw CSV files are not in the repo. The dashboard uses `outputs/cleaned_delivery_data.csv`.
 
 ---
 
-## Feature Engineering
+## Tools
 
-| Feature | Description |
-|---------|-------------|
-| `delay_days` | Actual delivery date minus estimated delivery date (positive = late) |
-| `days_difference` | Estimated delivery date minus actual delivery date (positive = early) |
-| `delivery_status` | Categorized as "On Time", "Late", or "Super Late" |
-| `is_late` | Binary flag (1 = Late or Super Late) |
-| `risk_score` | State Risk Score combining delay rate and customer dissatisfaction |
+- Python
+- Pandas
+- NumPy
+- Plotly
+- Streamlit
+- Jupyter Notebook
 
 ---
 
 ## Dashboard Features
 
-The interactive Streamlit dashboard includes:
-
-- **KPI Cards** - Total orders, late delivery %, average review score, super late %
-- **Geographic Analysis** - Bar chart showing late delivery % by state
-- **Sentiment Analysis** - Delivery status vs customer review scores
-- **Scatter Plot** - Delay days vs review score with color coding
-- **Category Analysis** - Top 10 product categories by late delivery rate
-- **State Risk Score** - Table ranking states by combined risk metric
-- **Executive Insights** - Dynamic business summary and recommendations
+- KPI cards (total orders, late %, avg review, super late %)
+- Bar chart: late delivery % by state
+- Bar chart: delivery status vs review score
+- Scatter plot: delay days vs review score
+- Bar chart: top 10 categories by late delivery rate
+- Risk score table
+- Executive summary with recommendations
