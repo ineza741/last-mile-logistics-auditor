@@ -8,9 +8,18 @@ Veridi Logistics was getting more negative customer reviews and wanted to know i
 
 ## Project Links
 
-- **Notebook:** [logistics_audit.ipynb](notebooks/logistics_audit.ipynb)
-- **Dashboard:** https://last-mile-logistics-auditorgit-cgkkhm3ufokdaoyvkl3xnh.streamlit.app/
-- **Presentation:** [Google Slides](https://docs.google.com/presentation/d/1MmSwxPIsFqK3bw5nUsLOsnjTN29Ck2Cm/edit?usp=sharing&ouid=110080855562115636061&rtpof=true&sd=true)
+### Notebook
+Jupyter Notebook (.ipynb):  
+https://github.com/ineza741/last-mile-logistics-auditor/blob/main/notebooks/logistics_audit.ipynb
+
+Notebook HTML Export:  
+https://github.com/ineza741/last-mile-logistics-auditor/blob/main/notebooks/logistics_audit.html
+
+### Dashboard
+https://last-mile-logistics-auditorgit-cgkkhm3ufokdaoyvkl3xnh.streamlit.app/
+
+### Presentation
+https://docs.google.com/presentation/d/1MmSwxPIsFqK3bw5nUsLOsnjTN29Ck2Cm/edit?usp=sharing&ouid=110080855562115636061&rtpof=true&sd=true
 
 ---
 
