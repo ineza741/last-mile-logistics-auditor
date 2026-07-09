@@ -1,24 +1,59 @@
 # Last Mile Logistics Auditor
-
-**Delivery Performance & Customer Satisfaction Analysis**
-
----
-
-## Executive Summary
-
-This project analyzes last-mile delivery performance for Veridi Logistics using real transactional data from the Olist Brazilian E-Commerce dataset. The analysis examines over 99,000 delivered orders to determine whether delivery delays are concentrated in specific regions and whether late deliveries negatively impact customer satisfaction. Results show clear geographic patterns in delivery failures, with some states experiencing late delivery rates exceeding 30%. There is a strong correlation between delivery delays and lower customer review scores, confirming that late deliveries directly affect customer satisfaction. Based on these findings, I developed a State Risk Score metric to help prioritize logistics improvements in the most critical regions.
+## Delivery Performance & Customer Satisfaction Analysis
 
 ---
 
-## Project Links
+## A. Executive Summary
 
-| Resource | Link |
-|----------|------|
-| GitHub | [ineza741/last-mile-logistics-auditor](https://github.com/ineza741/last-mile-logistics-auditor) |
-| Dashboard | [Live Streamlit App](https://last-mile-logistics-auditorgit-cgkkhm3ufokdaoyvkl3xnh.streamlit.app/) |
-| Presentation | [Google Slides](https://docs.google.com/presentation/d/1MmSwxPIsFqK3bw5nUsLOsnjTN29Ck2Cm/edit?usp=sharing&ouid=110080855562115636061&rtpof=true&sd=true) |
-| Notebook | [logistics_audit.ipynb](notebooks/logistics_audit.ipynb) |
-| Interview Notes | [interview_notes.md](interview_notes.md) |
+Veridi Logistics experienced increasing negative customer reviews and needed to determine whether inaccurate delivery estimates were causing customer dissatisfaction. This project analyzed the Olist Brazilian E-Commerce dataset by combining order, customer, product, and review data into a single analytical dataset. The analysis found that delivery performance varies across regions, with some states experiencing higher late delivery rates. Late and super late deliveries showed lower customer review scores, confirming that logistics performance directly affects customer satisfaction. The final dashboard helps identify high-risk regions where logistics improvements should be prioritized.
+
+---
+
+## B. Project Links
+
+### Notebook
+[logistics_audit.ipynb](notebooks/logistics_audit.ipynb)
+
+### Dashboard
+https://last-mile-logistics-auditorgit-cgkkhm3ufokdaoyvkl3xnh.streamlit.app/
+
+### Presentation
+[Google Slides Presentation](https://docs.google.com/presentation/d/1MmSwxPIsFqK3bw5nUsLOsnjTN29Ck2Cm/edit?usp=sharing&ouid=110080855562115636061&rtpof=true&sd=true)
+
+---
+
+## C. Technical Explanation
+
+### Data Cleaning
+
+The original dataset was provided as multiple relational CSV files. The data preparation process included:
+
+- Loading Orders, Reviews, Customers, Order Items, and Product datasets.
+- Joining datasets using relational keys:
+  - order_id
+  - customer_id
+  - product_id
+- Removing canceled and unavailable orders from delivery analysis.
+- Handling missing delivery dates.
+- Converting date columns into datetime format.
+- Creating new delivery performance features:
+  - delay_days
+  - days_difference
+  - delivery_status
+- Translating product categories from Portuguese to English.
+- Exporting a cleaned dataset for dashboard analysis.
+
+### Candidate's Choice Addition: State Risk Score
+
+I added a State Risk Score metric to help Veridi Logistics prioritize improvement areas.
+
+**Formula:**
+
+```
+State Risk Score = Late Delivery Percentage × (5 - Average Review Score)
+```
+
+This combines operational performance and customer satisfaction into one metric. A state with frequent late deliveries and poor customer reviews receives a higher score, helping managers identify regions where logistics improvements will create the highest business impact.
 
 ---
 
@@ -63,17 +98,6 @@ This project was designed to answer both questions through data analysis and pro
 
 ---
 
-## Data Cleaning
-
-The following cleaning steps were applied:
-
-1. **Removed canceled orders** - Orders with status `canceled` or `unavailable` were excluded
-2. **Removed incomplete records** - Orders without a delivery date were removed
-3. **Converted timestamps** - Date columns converted to datetime format for calculations
-4. **Deduplicated records** - After joining multiple tables, kept one record per order
-
----
-
 ## Feature Engineering
 
 | Feature | Description |
@@ -100,27 +124,6 @@ The interactive Streamlit dashboard includes:
 
 ---
 
-## Candidate Choice: State Risk Score
-
-### What is State Risk Score?
-
-A custom metric that combines delivery performance with customer satisfaction to identify regions requiring priority attention.
-
-### Formula
-
-```
-Risk Score = Late Delivery Percentage × (5 - Average Review Score)
-```
-
-### Business Value
-
-- **High Risk Score** = Many late deliveries AND low customer satisfaction
-- **Low Risk Score** = Few late deliveries OR high customer satisfaction
-
-This metric helps management prioritize logistics improvements in regions where delivery problems are causing the biggest customer experience problems.
-
----
-
 ## How to Run Locally
 
 ### Prerequisites
@@ -132,7 +135,7 @@ This metric helps management prioritize logistics improvements in regions where 
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/last-mile-logistics-auditor.git
+   git clone https://github.com/ineza741/last-mile-logistics-auditor.git
    cd last-mile-logistics-auditor
    ```
 
