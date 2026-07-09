@@ -18,3 +18,7 @@ __pycache__/
 # OS
 .DS_Store
 Thumbs.db
+
+# Local prep notes (not needed for submission)
+interview_notes.md
+presentation_outline.md
