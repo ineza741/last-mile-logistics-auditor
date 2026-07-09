@@ -12,11 +12,12 @@ This project analyzes last-mile delivery performance for Veridi Logistics using 
 
 ## Project Links
 
-| Resource | Status |
-|----------|--------|
+| Resource | Link |
+|----------|------|
+| GitHub | [ineza741/last-mile-logistics-auditor](https://github.com/ineza741/last-mile-logistics-auditor) |
+| Dashboard | [Live Streamlit App](https://last-mile-logistics-auditorgit-cgkkhm3ufokdaoyvkl3xnh.streamlit.app/) |
+| Presentation | [Google Slides](https://docs.google.com/presentation/d/1MmSwxPIsFqK3bw5nUsLOsnjTN29Ck2Cm/edit?usp=sharing&ouid=110080855562115636061&rtpof=true&sd=true) |
 | Notebook | [logistics_audit.ipynb](notebooks/logistics_audit.ipynb) |
-| Dashboard | [Run locally](#how-to-run-locally) |
-| Presentation | [presentation_outline.md](presentation_outline.md) |
 | Interview Notes | [interview_notes.md](interview_notes.md) |
 
 ---
@@ -151,16 +152,12 @@ This metric helps management prioritize logistics improvements in regions where 
 
 ## Submission Checklist
 
-- [x] `dashboard/app.py` - Streamlit dashboard with safe path configuration
-- [x] `notebooks/logistics_audit.ipynb` - Data engineering notebook
-- [x] `notebooks/logistics_audit.html` - Exported notebook with outputs
-- [x] `outputs/cleaned_delivery_data.csv` - Cleaned dataset for dashboard
-- [x] `README.md` - Professional documentation
-- [x] `requirements.txt` - Python dependencies
-- [x] `.gitignore` - Excludes raw data and sensitive files
-- [x] `presentation_outline.md` - 8-slide interview presentation
-- [x] `interview_notes.md` - Q&A preparation guide
-- [x] Raw data files excluded from repository
+- [x] GitHub public: [Repository](https://github.com/ineza741/last-mile-logistics-auditor)
+- [x] Notebook uploaded: [logistics_audit.ipynb](notebooks/logistics_audit.ipynb)
+- [x] HTML export uploaded: [logistics_audit.html](notebooks/logistics_audit.html)
+- [x] Dashboard deployed: [Live App](https://last-mile-logistics-auditorgit-cgkkhm3ufokdaoyvkl3xnh.streamlit.app/)
+- [x] Presentation uploaded: [Google Slides](https://docs.google.com/presentation/d/1MmSwxPIsFqK3bw5nUsLOsnjTN29Ck2Cm/edit?usp=sharing&ouid=110080855562115636061&rtpof=true&sd=true)
+- [x] Candidate choice explained: State Risk Score in README and dashboard
 
 ---
 
