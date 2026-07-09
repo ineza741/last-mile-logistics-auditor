@@ -8,6 +8,7 @@ Run with: streamlit run dashboard/app.py
 
 import streamlit as st
 import pandas as pd
+import numpy as np
 import plotly.express as px
 from pathlib import Path
 
@@ -135,9 +136,15 @@ state_delivery = filtered_df.groupby('customer_state').agg(
     avg_review=('review_score', 'mean')
 ).reset_index()
 
-# Calculate late percentage
-state_delivery['late_percentage'] = (
-    state_delivery['late_orders'] / state_delivery['total_orders'] * 100
+# Force columns to numeric for safe calculation
+state_delivery["late_orders"] = pd.to_numeric(state_delivery["late_orders"], errors="coerce").fillna(0)
+state_delivery["total_orders"] = pd.to_numeric(state_delivery["total_orders"], errors="coerce").fillna(0)
+
+# Calculate late percentage safely
+state_delivery["late_percentage"] = np.where(
+    state_delivery["total_orders"] > 0,
+    (state_delivery["late_orders"] / state_delivery["total_orders"]) * 100,
+    0
 ).round(2)
 
 # Sort by late percentage descending
@@ -224,9 +231,15 @@ category_delivery = filtered_df.groupby('product_category_name_english').agg(
     avg_review=('review_score', 'mean')
 ).reset_index()
 
-# Calculate late percentage
-category_delivery['late_percentage'] = (
-    category_delivery['late_orders'] / category_delivery['total_orders'] * 100
+# Force columns to numeric for safe calculation
+category_delivery["late_orders"] = pd.to_numeric(category_delivery["late_orders"], errors="coerce").fillna(0)
+category_delivery["total_orders"] = pd.to_numeric(category_delivery["total_orders"], errors="coerce").fillna(0)
+
+# Calculate late percentage safely
+category_delivery["late_percentage"] = np.where(
+    category_delivery["total_orders"] > 0,
+    (category_delivery["late_orders"] / category_delivery["total_orders"]) * 100,
+    0
 ).round(2)
 
 # Filter categories with at least 50 orders for meaningful analysis
@@ -270,12 +283,21 @@ risk_analysis = filtered_df.groupby('customer_state').agg(
     avg_review=('review_score', 'mean')
 ).reset_index()
 
-# Calculate late percentage and risk score
-risk_analysis['late_percentage'] = (
-    risk_analysis['late_orders'] / risk_analysis['total_orders'] * 100
+# Force columns to numeric for safe calculation
+risk_analysis["late_orders"] = pd.to_numeric(risk_analysis["late_orders"], errors="coerce").fillna(0)
+risk_analysis["total_orders"] = pd.to_numeric(risk_analysis["total_orders"], errors="coerce").fillna(0)
+risk_analysis["avg_review"] = pd.to_numeric(risk_analysis["avg_review"], errors="coerce").fillna(0)
+
+# Calculate late percentage safely
+risk_analysis["late_percentage"] = np.where(
+    risk_analysis["total_orders"] > 0,
+    (risk_analysis["late_orders"] / risk_analysis["total_orders"]) * 100,
+    0
 ).round(2)
-risk_analysis['risk_score'] = (
-    risk_analysis['late_percentage'] * (5 - risk_analysis['avg_review'])
+
+# Calculate risk score safely
+risk_analysis["risk_score"] = (
+    risk_analysis["late_percentage"] * (5 - risk_analysis["avg_review"])
 ).round(2)
 
 # Sort by risk score descending
