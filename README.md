@@ -4,24 +4,23 @@
 
 Veridi Logistics was getting more negative customer reviews and wanted to know if late deliveries were the cause. I analyzed the Olist Brazilian E-Commerce dataset to see if delivery delays were concentrated in certain regions. I combined orders, customers, products, and reviews into one dataset and found that some states have much higher late delivery rates than others. Late deliveries also had lower review scores. I built a dashboard that shows which regions need improvement.
 
----
-
 ## Project Links
 
 ### Notebook
-Jupyter Notebook (.ipynb):  
+
+Jupyter Notebook (.ipynb):
 https://github.com/ineza741/last-mile-logistics-auditor/blob/main/notebooks/logistics_audit.ipynb
 
-Notebook HTML Export:  
+Notebook HTML Export:
 https://github.com/ineza741/last-mile-logistics-auditor/blob/main/notebooks/logistics_audit.html
 
 ### Dashboard
+
 https://last-mile-logistics-auditorgit-cgkkhm3ufokdaoyvkl3xnh.streamlit.app/
 
 ### Presentation
-https://docs.google.com/presentation/d/1MmSwxPIsFqK3bw5nUsLOsnjTN29Ck2Cm/edit?usp=sharing&ouid=110080855562115636061&rtpof=true&sd=true
 
----
+https://docs.google.com/presentation/d/1MmSwxPIsFqK3bw5nUsLOsnjTN29Ck2Cm/edit?usp=sharing&ouid=110080855562115636061&rtpof=true&sd=true
 
 ## Technical Explanation
 
@@ -45,8 +44,6 @@ The dataset came as separate CSV files. I loaded orders, reviews, customers, ord
 
 Built with Streamlit. Reads the cleaned CSV and shows KPIs, charts, and filters by state and product category.
 
----
-
 ## Candidate Choice: State Risk Score
 
 I created a State Risk Score to help find which states need the most attention.
@@ -58,8 +55,6 @@ State Risk Score = Late Delivery % × (5 - Average Review Score)
 ```
 
 A high score means the state has many late deliveries and unhappy customers. This helps prioritize where to improve logistics.
-
----
 
 ## Dataset
 
@@ -76,8 +71,6 @@ A high score means the state has many late deliveries and unhappy customers. Thi
 
 Raw CSV files are not in the repo. The dashboard uses `outputs/cleaned_delivery_data.csv`.
 
----
-
 ## Tools
 
 - Python
@@ -86,8 +79,6 @@ Raw CSV files are not in the repo. The dashboard uses `outputs/cleaned_delivery_
 - Plotly
 - Streamlit
 - Jupyter Notebook
-
----
 
 ## Dashboard Features
 
