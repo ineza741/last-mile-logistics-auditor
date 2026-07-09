@@ -60,7 +60,7 @@ df = load_data()
 # SIDEBAR FILTERS
 # ==================================================
 
-st.sidebar.header("🔍 Filters")
+st.sidebar.header("Filters")
 
 # Filter 1: Customer State
 # Get all unique states and add "All" option
@@ -84,10 +84,19 @@ if selected_category != 'All':
     filtered_df = filtered_df[filtered_df['product_category_name_english'] == selected_category]
 
 # ==================================================
+# EMPTY DATA CHECK
+# ==================================================
+# Stop execution if no data matches the filters
+
+if filtered_df.empty:
+    st.warning("No data available for the selected filters. Please choose another state or category.")
+    st.stop()
+
+# ==================================================
 # MAIN TITLE
 # ==================================================
 
-st.title("🚚 Last Mile Logistics Auditor")
+st.title("Last Mile Logistics Auditor")
 st.markdown("**Delivery Performance & Customer Satisfaction Analysis**")
 st.markdown("---")
 
@@ -126,7 +135,7 @@ st.markdown("---")
 # CHART 1: GEOGRAPHIC DELIVERY PERFORMANCE
 # ==================================================
 
-st.subheader("📊 Chart 1: Geographic Delivery Performance")
+st.subheader("Chart 1: Geographic Delivery Performance")
 st.markdown("**Question:** Which states have the worst delivery?")
 
 # Calculate delivery metrics by state
@@ -150,24 +159,28 @@ state_delivery["late_percentage"] = np.where(
 # Sort by late percentage descending
 state_delivery = state_delivery.sort_values('late_percentage', ascending=False)
 
-# Create bar chart
-fig1 = px.bar(
-    state_delivery,
-    x='customer_state',
-    y='late_percentage',
-    title='Late Delivery Percentage by State',
-    labels={'customer_state': 'State', 'late_percentage': 'Late %'},
-    color='late_percentage',
-    color_continuous_scale='Reds'
-)
-fig1.update_layout(xaxis_tickangle=-45)
-st.plotly_chart(fig1, use_container_width=True)
+# Check if data exists before plotting
+if state_delivery.empty:
+    st.info("No state-level delivery data available for the selected filters.")
+else:
+    # Create bar chart
+    fig1 = px.bar(
+        state_delivery,
+        x='customer_state',
+        y='late_percentage',
+        title='Late Delivery Percentage by State',
+        labels={'customer_state': 'State', 'late_percentage': 'Late %'},
+        color='late_percentage',
+        color_continuous_scale='Reds'
+    )
+    fig1.update_layout(xaxis_tickangle=-45)
+    st.plotly_chart(fig1, width="stretch")
 
 # ==================================================
 # CHART 2: DELIVERY STATUS VS CUSTOMER REVIEW
 # ==================================================
 
-st.subheader("📊 Chart 2: Delivery Status vs Customer Review")
+st.subheader("Chart 2: Delivery Status vs Customer Review")
 st.markdown("**Question:** Do delays reduce customer satisfaction?")
 
 # Calculate average review by delivery status
@@ -185,43 +198,51 @@ review_by_status['delivery_status'] = pd.Categorical(
 )
 review_by_status = review_by_status.sort_values('delivery_status')
 
-# Create bar chart
-fig2 = px.bar(
-    review_by_status,
-    x='delivery_status',
-    y='avg_review',
-    title='Impact of Delivery Delay on Customer Reviews',
-    labels={'delivery_status': 'Delivery Status', 'avg_review': 'Average Review Score'},
-    color='delivery_status',
-    color_discrete_map={'On Time': 'green', 'Late': 'orange', 'Super Late': 'red'}
-)
-fig2.update_layout(yaxis_range=[0, 5])
-st.plotly_chart(fig2, use_container_width=True)
+# Check if data exists before plotting
+if review_by_status.empty:
+    st.info("No delivery status data available for the selected filters.")
+else:
+    # Create bar chart
+    fig2 = px.bar(
+        review_by_status,
+        x='delivery_status',
+        y='avg_review',
+        title='Impact of Delivery Delay on Customer Reviews',
+        labels={'delivery_status': 'Delivery Status', 'avg_review': 'Average Review Score'},
+        color='delivery_status',
+        color_discrete_map={'On Time': 'green', 'Late': 'orange', 'Super Late': 'red'}
+    )
+    fig2.update_layout(yaxis_range=[0, 5])
+    st.plotly_chart(fig2, width="stretch")
 
 # ==================================================
 # CHART 3: DELAY DAYS VS REVIEW SCORE
 # ==================================================
 
-st.subheader("📊 Chart 3: Delivery Delay vs Customer Sentiment")
+st.subheader("Chart 3: Delivery Delay vs Customer Sentiment")
 
-# Create scatter plot
-fig3 = px.scatter(
-    filtered_df,
-    x='delay_days',
-    y='review_score',
-    color='delivery_status',
-    title='Delivery Delay vs Customer Sentiment',
-    labels={'delay_days': 'Delay Days', 'review_score': 'Review Score'},
-    color_discrete_map={'On Time': 'green', 'Late': 'orange', 'Super Late': 'red'},
-    opacity=0.5
-)
-st.plotly_chart(fig3, use_container_width=True)
+# Check if data exists before plotting
+if filtered_df.empty:
+    st.info("No data available for scatter plot with the selected filters.")
+else:
+    # Create scatter plot
+    fig3 = px.scatter(
+        filtered_df,
+        x='delay_days',
+        y='review_score',
+        color='delivery_status',
+        title='Delivery Delay vs Customer Sentiment',
+        labels={'delay_days': 'Delay Days', 'review_score': 'Review Score'},
+        color_discrete_map={'On Time': 'green', 'Late': 'orange', 'Super Late': 'red'},
+        opacity=0.5
+    )
+    st.plotly_chart(fig3, width="stretch")
 
 # ==================================================
 # CHART 4: PRODUCT CATEGORY ANALYSIS
 # ==================================================
 
-st.subheader("📊 Chart 4: Product Category Analysis")
+st.subheader("Chart 4: Product Category Analysis")
 st.markdown("**Question:** Which product categories have delivery problems?")
 
 # Calculate delivery metrics by product category
@@ -248,24 +269,28 @@ category_delivery = category_delivery[category_delivery['total_orders'] >= 50]
 # Sort by late percentage and take top 10
 category_delivery = category_delivery.sort_values('late_percentage', ascending=False).head(10)
 
-# Create bar chart
-fig4 = px.bar(
-    category_delivery,
-    x='product_category_name_english',
-    y='late_percentage',
-    title='Top 10 Categories by Late Delivery Percentage',
-    labels={'product_category_name_english': 'Category', 'late_percentage': 'Late %'},
-    color='late_percentage',
-    color_continuous_scale='Reds'
-)
-fig4.update_layout(xaxis_tickangle=-45)
-st.plotly_chart(fig4, use_container_width=True)
+# Check if data exists before plotting
+if category_delivery.empty:
+    st.info("No category-level delivery data available for the selected filters.")
+else:
+    # Create bar chart
+    fig4 = px.bar(
+        category_delivery,
+        x='product_category_name_english',
+        y='late_percentage',
+        title='Top 10 Categories by Late Delivery Percentage',
+        labels={'product_category_name_english': 'Category', 'late_percentage': 'Late %'},
+        color='late_percentage',
+        color_continuous_scale='Reds'
+    )
+    fig4.update_layout(xaxis_tickangle=-45)
+    st.plotly_chart(fig4, width="stretch")
 
 # ==================================================
 # CANDIDATE CHOICE FEATURE: STATE RISK SCORE
 # ==================================================
 
-st.subheader("🎯 Candidate Choice Feature: State Risk Score")
+st.subheader("Candidate Choice Feature: State Risk Score")
 st.markdown("---")
 
 # Create explanation box
@@ -303,75 +328,87 @@ risk_analysis["risk_score"] = (
 # Sort by risk score descending
 risk_analysis = risk_analysis.sort_values('risk_score', ascending=False)
 
-# Create display table with selected columns
-risk_table = risk_analysis[['customer_state', 'late_percentage', 'avg_review', 'risk_score']].copy()
-risk_table.columns = ['State', 'Late %', 'Avg Review Score', 'Risk Score']
-
-# Display the table
-st.dataframe(risk_table, use_container_width=True, hide_index=True)
+# Check if data exists before displaying
+if risk_analysis.empty:
+    st.info("No risk score data available for the selected filters.")
+else:
+    # Create display table with selected columns
+    risk_table = risk_analysis[['customer_state', 'late_percentage', 'avg_review', 'risk_score']].copy()
+    risk_table.columns = ['State', 'Late %', 'Avg Review Score', 'Risk Score']
+    
+    # Display the table
+    st.dataframe(risk_table, width="stretch", hide_index=True)
 
 # ==================================================
 # EXECUTIVE INSIGHT SECTION
 # ==================================================
 
-st.subheader("📋 Executive Insight")
+st.subheader("Executive Insight")
 st.markdown("---")
 
-# Calculate dynamic insights from the data
-
-# Worst performing state
-worst_state = state_delivery.iloc[0]['customer_state']
-worst_state_late_pct = state_delivery.iloc[0]['late_percentage']
-
-# Best performing state
-best_state = state_delivery.iloc[-1]['customer_state']
-best_state_late_pct = state_delivery.iloc[-1]['late_percentage']
-
-# Review score difference between On Time and Late
-on_time_review = filtered_df[filtered_df['delivery_status'] == 'On Time']['review_score'].mean()
-late_review = filtered_df[filtered_df['delivery_status'] == 'Late']['review_score'].mean()
-review_difference = on_time_review - late_review
-
-# Display business summary
-st.markdown("### Business Summary for Veridi Logistics")
-
-col1, col2, col3 = st.columns(3)
-
-with col1:
-    st.metric(
-        "Worst Performing State",
-        f"{worst_state}",
-        f"{worst_state_late_pct:.1f}% late"
-    )
-
-with col2:
-    st.metric(
-        "Best Performing State",
-        f"{best_state}",
-        f"{best_state_late_pct:.1f}% late"
-    )
-
-with col3:
-    st.metric(
-        "Review Score Impact",
-        f"{review_difference:.2f}",
-        "On Time vs Late"
-    )
-
-st.markdown("---")
-
-# Recommendation
-st.markdown("### Recommendation")
-st.write(f"""
-Based on the analysis, here are the key findings:
-
-1. **Worst State:** {worst_state} has the highest late delivery rate at {worst_state_late_pct:.1f}%
-2. **Review Impact:** Late deliveries reduce review scores by {review_difference:.2f} points on average
-3. **Priority Action:** Focus logistics improvements on {worst_state} to reduce delays and improve customer satisfaction
-
-The Risk Score analysis shows that states with both high delay rates AND low review scores 
-should be prioritized for immediate intervention.
-""")
+# Check if state_delivery has data before accessing iloc
+if state_delivery.empty:
+    st.info("No state-level data available for executive insights.")
+else:
+    # Calculate dynamic insights from the data
+    
+    # Worst performing state
+    worst_state = state_delivery.iloc[0]['customer_state']
+    worst_state_late_pct = state_delivery.iloc[0]['late_percentage']
+    
+    # Best performing state
+    best_state = state_delivery.iloc[-1]['customer_state']
+    best_state_late_pct = state_delivery.iloc[-1]['late_percentage']
+    
+    # Review score difference between On Time and Late
+    on_time_review = filtered_df[filtered_df['delivery_status'] == 'On Time']['review_score'].mean()
+    late_review = filtered_df[filtered_df['delivery_status'] == 'Late']['review_score'].mean()
+    
+    # Handle NaN values
+    on_time_review = on_time_review if not pd.isna(on_time_review) else 0
+    late_review = late_review if not pd.isna(late_review) else 0
+    review_difference = on_time_review - late_review
+    
+    # Display business summary
+    st.markdown("### Business Summary for Veridi Logistics")
+    
+    col1, col2, col3 = st.columns(3)
+    
+    with col1:
+        st.metric(
+            "Worst Performing State",
+            f"{worst_state}",
+            f"{worst_state_late_pct:.1f}% late"
+        )
+    
+    with col2:
+        st.metric(
+            "Best Performing State",
+            f"{best_state}",
+            f"{best_state_late_pct:.1f}% late"
+        )
+    
+    with col3:
+        st.metric(
+            "Review Score Impact",
+            f"{review_difference:.2f}",
+            "On Time vs Late"
+        )
+    
+    st.markdown("---")
+    
+    # Recommendation
+    st.markdown("### Recommendation")
+    st.write(f"""
+    Based on the analysis, here are the key findings:
+    
+    1. **Worst State:** {worst_state} has the highest late delivery rate at {worst_state_late_pct:.1f}%
+    2. **Review Impact:** Late deliveries reduce review scores by {review_difference:.2f} points on average
+    3. **Priority Action:** Focus logistics improvements on {worst_state} to reduce delays and improve customer satisfaction
+    
+    The Risk Score analysis shows that states with both high delay rates AND low review scores 
+    should be prioritized for immediate intervention.
+    """)
 
 # ==================================================
 # FOOTER

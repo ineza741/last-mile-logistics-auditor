@@ -164,6 +164,18 @@ This metric helps management prioritize logistics improvements in regions where 
 
 ---
 
+## Dashboard QA Checklist
+
+- [x] App loads successfully
+- [x] State filter works
+- [x] Product category filter works
+- [x] KPI cards update
+- [x] All charts update
+- [x] Empty filter selections show friendly warning instead of crashing
+- [x] Streamlit Cloud deployment works
+
+---
+
 ## License
 
 This project is for portfolio and interview demonstration purposes.
